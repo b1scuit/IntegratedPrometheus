@@ -17,6 +17,7 @@ public class MetricsManager {
         defineMetrics();
     }
 
+
     private void defineMetrics() {
         PrometheusRegistry registry = PrometheusRegistry.defaultRegistry;
         // Metric: Total number of networks
@@ -48,7 +49,6 @@ public class MetricsManager {
                         }
                     }
                 }).register(registry);
-
     }
 
     public void networkItemCallback(CounterWithCallback.Callback callback, INetworkElement networkElement, INetwork network) {
