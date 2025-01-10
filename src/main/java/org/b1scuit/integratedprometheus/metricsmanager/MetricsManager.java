@@ -2,11 +2,11 @@ package org.b1scuit.integratedprometheus.metricsmanager;
 
 import io.prometheus.metrics.core.metrics.CounterWithCallback;
 import io.prometheus.metrics.model.registry.PrometheusRegistry;
+import net.minecraft.world.item.ItemStack;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
-import org.cyclops.integrateddynamics.api.network.INetwork;
-import org.cyclops.integrateddynamics.api.network.INetworkElement;
-import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
+import org.cyclops.integrateddynamics.api.network.*;
 import org.cyclops.integrateddynamics.core.persist.world.NetworkWorldStorage;
+import org.cyclops.integratedtunnels.core.network.ItemNetwork;
 
 
 public class MetricsManager {
@@ -49,6 +49,29 @@ public class MetricsManager {
                         }
                     }
                 }).register(registry);
+
+        CounterWithCallback.builder()
+        .name("integrated_dynamics_network_element_value_item_count")
+        .help("Number of items per network element value")
+        .labelNames("network_id", "element_id", "item_name")
+        .callback((callback) -> {
+            for (INetwork network : worldStorage.getNetworks()) {
+                IFullNetworkListener[] listeners = network.getFullNetworkListeners();
+                for (IFullNetworkListener listener : listeners) {
+                    if (listener instanceof ItemNetwork itemNetwork) {
+                        for (int j : itemNetwork.getChannels()) {
+                            INetworkIngredientsChannel<ItemStack, Integer> items = itemNetwork.getChannelInternal(j);
+                            for (ItemStack item: items){
+                                String networkId = Integer.toString(network.hashCode());
+                                String elementId = Integer.toString(itemNetwork.hashCode());
+                                callback.call((double) item.getCount(), networkId, elementId, item.getDescriptionId());
+                            }
+                        }
+                    }
+                }
+            }
+
+        }).register(registry);
     }
 
     public void networkItemCallback(CounterWithCallback.Callback callback, INetworkElement networkElement, INetwork network) {

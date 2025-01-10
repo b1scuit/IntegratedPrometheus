@@ -20,6 +20,11 @@ configurations {
     shadow.setTransitive(false);
 }
 
+shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.runtimeClasspath, project.configurations.modLib]
+}
+
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -249,4 +254,33 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+
+tasks.register('downloadSourcesAndJavadoc') {
+    doLast {
+        println 'Downloading sources and Javadoc for all dependencies...'
+    }
+}
+
+tasks.named('shadowJar').configure {
+    finalizedBy 'reobfJar' // Ensure the shadow JAR is reobfuscated
+}
+
+tasks.named('build').configure {
+    dependsOn shadowJar // Ensure build depends on the shadow JAR
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+eclipse {
+    classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }

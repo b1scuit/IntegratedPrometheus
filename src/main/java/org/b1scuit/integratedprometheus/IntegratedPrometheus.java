@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.b1scuit.integratedprometheus.metricsmanager.MetricsManager;
 import org.slf4j.Logger;
 import org.b1scuit.integratedprometheus.prometheus.Prometheus;
 
@@ -46,6 +47,8 @@ public class IntegratedPrometheus
     {
         LOGGER.info("Initalising Prometheus");
         try {
+            new MetricsManager();
+
             prometheus.initialize();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
