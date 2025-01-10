@@ -17,7 +17,7 @@ base {
 configurations {
     modLib
     implementation.extendsFrom modLib
-    shadow.setTransitive(false);
+    shadow.setTransitive(false)
 }
 
 shadowJar {

@@ -6,7 +6,6 @@ import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class Prometheus {
     private static final Logger LOGGER = LogUtils.getLogger();

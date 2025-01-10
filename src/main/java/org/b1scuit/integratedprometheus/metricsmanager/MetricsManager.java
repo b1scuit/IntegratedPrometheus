@@ -64,7 +64,7 @@ public class MetricsManager {
                             for (ItemStack item: items){
                                 String networkId = Integer.toString(network.hashCode());
                                 String elementId = Integer.toString(itemNetwork.hashCode());
-                                callback.call((double) item.getCount(), networkId, elementId, item.getDescriptionId());
+                                callback.call(item.getCount(), networkId, elementId, item.getDescriptionId());
                             }
                         }
                     }
