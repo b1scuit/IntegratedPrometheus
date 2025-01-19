@@ -2,9 +2,7 @@ package org.b1scuit.integratedprometheus;
 
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.b1scuit.integratedprometheus.metricsmanager.MetricsManager;
@@ -24,19 +22,14 @@ public class IntegratedPrometheus
 
     protected final Prometheus prometheus;
 
-    public IntegratedPrometheus(FMLJavaModLoadingContext context)
+    public IntegratedPrometheus()
     {
         prometheus = new Prometheus();
-        IEventBus modEventBus = context.getModEventBus();
-
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        MinecraftForge.EVENT_BUS.addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
